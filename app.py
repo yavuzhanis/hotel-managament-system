@@ -1,13 +1,21 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from customer import Cust_Window
-
+from tkinter import ttk
 
 class HotelManagamentSystem:
     def __init__(self, root):
         self.root = root
         self.root.title("Hotel Managament System")
         self.root.geometry("1700x900+0+0")
+
+
+         #! Style and theme setup
+        style = ttk.Style()
+        style.theme_use("clam")
+
+
+
         # ! ÜST IMG
         img1 = Image.open(r"./images/hotel.png")
         img1 = img1.resize((1700, 180), Image.LANCZOS)
