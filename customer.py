@@ -437,6 +437,7 @@ class Cust_Window:
         self.Cus_Details_Table.column("address", width=100)
 
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+        self.Cus_Details_Table.bind("<ButtonRelease-1>",self.get_cursors)
         self.fetch_data()
 
     def add_data(self):
@@ -496,6 +497,23 @@ class Cust_Window:
                 self.Cus_Details_Table.insert("", END, values=i)
             con.commit()
         con.close()
+
+    def get_cursors(self, event=""):
+        cursor_row = self.Cus_Details_Table.focus()
+        content = self.Cus_Details_Table.item(cursor_row)
+        row = content["values"]
+
+        self.var_ref.set(row[0])
+        self.var_cust_name.set(row[1])
+        self.var_mother.set(row[2])
+        self.var_gender.set(row[3])
+        self.var_post.set(row[4])
+        self.var_mobile.set(row[5])
+        self.var_email.set(row[6])
+        self.var_nationality.set(row[7])
+        self.var_id_proof.set(row[8])
+        self.var_id_number.set(row[9])
+        self.var_address.set(row[10])
 
 
 if __name__ == "__main__":
