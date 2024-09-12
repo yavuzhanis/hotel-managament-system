@@ -2,8 +2,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import ttk
 import random
-
-
+import mysql.connector
+from tkinter import messagebox
 
 
 class Cust_Window:
@@ -15,7 +15,7 @@ class Cust_Window:
 
         #! variables
         self.var_ref = StringVar()
-        x = random.randint(1000,9999)
+        x = random.randint(1000, 9999)
         self.var_ref.set(str(x))
 
         self.var_cust_name = StringVar()
@@ -28,8 +28,6 @@ class Cust_Window:
         self.var_address = StringVar()
         self.var_id_proof = StringVar()
         self.var_id_number = StringVar()
-
-
 
         #! Style and theme setup
         style = ttk.Style()
@@ -80,6 +78,7 @@ class Cust_Window:
             width=26,
             textvariable=self.var_ref,
             font=("times new roman", 13, "bold"),
+            state="readonly",
         )
         enty_ref.grid(row=0, column=1)
 
@@ -114,7 +113,7 @@ class Cust_Window:
         motherNameRef = ttk.Entry(
             LabelFrameleft,
             width=26,
-             textvariable=self.var_mother,
+            textvariable=self.var_mother,
             font=("times new roman", 13, "bold"),
         )
         motherNameRef.grid(row=2, column=1)
@@ -290,6 +289,7 @@ class Cust_Window:
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
+            command=self.add_data,
             width=10,
         )
         btnAdd.grid(row=0, column=0, padx=1)
@@ -439,23 +439,44 @@ class Cust_Window:
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
 
     def add_data(self):
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if self.var_mobile.get() == "" or self.var_mother.get() == "":
+            messagebox.showerror(
+                "Error", "All fields are required!,please.", parent=self.root
+            )
+        else:
+            try:
+                con = mysql.connector.connect(
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                my_cursor.execute(
+                    "insert into customer values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (
+                        self.var_ref.get(),
+                        self.var_cust_name.get(),
+                        self.var_mother.get(),
+                        self.var_gender.get(),
+                        self.var_post.get(),
+                        self.var_mobile.get(),
+                        self.var_email.get(),
+                        self.var_nationality.get(),
+                        self.var_id_proof.get(),
+                        self.var_id_number.get(),
+                        self.var_address.get(),
+                    ),
+                )
+                con.commit()
+                con.close()
+                messagebox.showinfo(
+                    "Success", "customer has been added!", parent=self.root
+                )
+            except Exception as es:
+                messagebox.showwarning(
+                    "Warning", f"Something went wrong!:{str(es)}", parent=self.root
+                )
 
 
 if __name__ == "__main__":
