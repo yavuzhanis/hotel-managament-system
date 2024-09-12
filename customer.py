@@ -378,19 +378,32 @@ class Cust_Window:
         scroll_x.config(command=self.Cus_Details_Table.xview)
         scroll_y.config(command=self.Cus_Details_Table.yview)
 
-        self.Cus_Details_Table.heading("ref", text="Reference No:")
-        self.Cus_Details_Table.heading("name", text="Name:")
-        self.Cus_Details_Table.heading("mother", text="Mother Name:")
-        self.Cus_Details_Table.heading("gender", text="Gender:")
-        self.Cus_Details_Table.heading("post", text="PostCode:")
-        self.Cus_Details_Table.heading("mobile", text="Mobile No:")
-        self.Cus_Details_Table.heading("email", text="E-Mail:")
-        self.Cus_Details_Table.heading("nationality", text="Nationality:")
-        self.Cus_Details_Table.heading("idproof", text="Id Proof.:")
-        self.Cus_Details_Table.heading("idnumber", text="Id Number:")
-        self.Cus_Details_Table.heading("address", text="Adress:")
+        self.Cus_Details_Table.heading("ref", text="Reference No")
+        self.Cus_Details_Table.heading("name", text="Name")
+        self.Cus_Details_Table.heading("mother", text="Mother Name")
+        self.Cus_Details_Table.heading("gender", text="Gender")
+        self.Cus_Details_Table.heading("post", text="PostCode")
+        self.Cus_Details_Table.heading("mobile", text="Mobile No")
+        self.Cus_Details_Table.heading("email", text="E-Mail")
+        self.Cus_Details_Table.heading("nationality", text="Nationality")
+        self.Cus_Details_Table.heading("idproof", text="Id Proof.")
+        self.Cus_Details_Table.heading("idnumber", text="Id Number")
+        self.Cus_Details_Table.heading("address", text="Adress")
 
         self.Cus_Details_Table["show"] = "headings"
+
+        self.Cus_Details_Table.column("ref", width=100)
+        self.Cus_Details_Table.column("name", width=100)
+        self.Cus_Details_Table.column("mother", width=100)
+        self.Cus_Details_Table.column("gender", width=100)
+        self.Cus_Details_Table.column("post", width=100)
+        self.Cus_Details_Table.column("mobile", width=100)
+        self.Cus_Details_Table.column("email", width=100)
+        self.Cus_Details_Table.column("nationality", width=100)
+        self.Cus_Details_Table.column("idproof", width=100)
+        self.Cus_Details_Table.column("idnumber", width=100)
+        self.Cus_Details_Table.column("address", width=100)
+
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
 
 
