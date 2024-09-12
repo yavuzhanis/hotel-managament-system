@@ -143,6 +143,8 @@ class HotelManagamentSystem:
         self.app = Cust_Window(self.new_window)
 
 
+
+
 if __name__ == "__main__":
     root = Tk()
     obj = HotelManagamentSystem(root)

@@ -437,6 +437,7 @@ class Cust_Window:
         self.Cus_Details_Table.column("address", width=100)
 
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+        self.fetch_data()
 
     def add_data(self):
         if self.var_mobile.get() == "" or self.var_mother.get() == "":
@@ -469,6 +470,7 @@ class Cust_Window:
                     ),
                 )
                 con.commit()
+                self.fetch_data()
                 con.close()
                 messagebox.showinfo(
                     "Success", "customer has been added!", parent=self.root
@@ -477,6 +479,23 @@ class Cust_Window:
                 messagebox.showwarning(
                     "Warning", f"Something went wrong!:{str(es)}", parent=self.root
                 )
+
+    def fetch_data(self):
+        con = mysql.connector.connect(
+            host="localhost",
+            username="root",
+            password="ASDfgh2580.",
+            database="hotelManagament",
+        )
+        my_cursor = con.cursor()
+        my_cursor.execute("select * from customer")  #! db changed
+        rows = my_cursor.fetchall()
+        if len(rows) != 0:
+            self.Cus_Details_Table.delete(*self.Cus_Details_Table.get_children())
+            for i in rows:
+                self.Cus_Details_Table.insert("", END, values=i)
+            con.commit()
+        con.close()
 
 
 if __name__ == "__main__":
