@@ -1,6 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import ttk
+import random
+
+
 
 
 class Cust_Window:
@@ -9,6 +12,24 @@ class Cust_Window:
         self.root = root
         self.root.title("Hotel Management System")
         self.root.geometry("1460x570+240+294")
+
+        #! variables
+        self.var_ref = StringVar()
+        x = random.randint(1000,9999)
+        self.var_ref.set(str(x))
+
+        self.var_cust_name = StringVar()
+        self.var_mother = StringVar()
+        self.var_gender = StringVar()
+        self.var_post = StringVar()
+        self.var_mobile = StringVar()
+        self.var_email = StringVar()
+        self.var_nationality = StringVar()
+        self.var_address = StringVar()
+        self.var_id_proof = StringVar()
+        self.var_id_number = StringVar()
+
+
 
         #! Style and theme setup
         style = ttk.Style()
@@ -57,6 +78,7 @@ class Cust_Window:
         enty_ref = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_ref,
             font=("times new roman", 13, "bold"),
         )
         enty_ref.grid(row=0, column=1)
@@ -74,6 +96,7 @@ class Cust_Window:
         txtcname = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_cust_name,
             font=("times new roman", 13, "bold"),
         )
         txtcname.grid(row=1, column=1)
@@ -91,6 +114,7 @@ class Cust_Window:
         motherNameRef = ttk.Entry(
             LabelFrameleft,
             width=26,
+             textvariable=self.var_mother,
             font=("times new roman", 13, "bold"),
         )
         motherNameRef.grid(row=2, column=1)
@@ -108,6 +132,7 @@ class Cust_Window:
             LabelFrameleft,
             font=("arial", 12, "bold"),
             width=27,
+            textvariable=self.var_gender,
             state="readonly",
         )
         combo_gender["value"] = ("Male", "Female", "Other")
@@ -127,6 +152,7 @@ class Cust_Window:
         enty_postcode = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_post,
             font=("times new roman", 13, "bold"),
         )
         enty_postcode.grid(row=4, column=1)
@@ -144,6 +170,7 @@ class Cust_Window:
         txtmobile = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_mobile,
             font=("times new roman", 13, "bold"),
         )
         txtmobile.grid(row=5, column=1)
@@ -161,6 +188,7 @@ class Cust_Window:
         email_text = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_email,
             font=("times new roman", 13, "bold"),
         )
         email_text.grid(row=6, column=1)
@@ -178,6 +206,7 @@ class Cust_Window:
             LabelFrameleft,
             font=("arial", 12, "bold"),
             width=27,
+            textvariable=self.var_nationality,
             state="readonly",
         )
         combo_nationality["value"] = (
@@ -208,6 +237,7 @@ class Cust_Window:
             LabelFrameleft,
             font=("arial", 12, "bold"),
             width=27,
+            textvariable=self.var_id_proof,
             state="readonly",
         )
         combo_idproof["value"] = ("AdharCard", "DrivingLicience", "Passport", "Other")
@@ -227,6 +257,7 @@ class Cust_Window:
         id_text = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_id_number,
             font=("times new roman", 13, "bold"),
         )
         id_text.grid(row=9, column=1)
@@ -244,6 +275,7 @@ class Cust_Window:
         address_text = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_address,
             font=("times new roman", 13, "bold"),
         )
         address_text.grid(row=10, column=1)
@@ -405,6 +437,25 @@ class Cust_Window:
         self.Cus_Details_Table.column("address", width=100)
 
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+
+    def add_data(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
