@@ -292,6 +292,107 @@ class Cust_Window:
         )
         btnReset.grid(row=0, column=3, padx=1)
 
+        #! label frame
+        table_frame = LabelFrame(
+            self.root,
+            bd=2,
+            relief=RIDGE,
+            text="View Details and Search System",
+            font=("times new roman", 12, "bold"),
+            padx=2,
+        )
+        table_frame.place(x=435, y=60, width=1000, height=490)
+
+        lbl_Searchby = Label(
+            table_frame,
+            text="Search By:",
+            fg="red",
+            font=("times new roman", 14, "bold"),
+        )
+        lbl_Searchby.grid(row=0, column=0, sticky=W, padx=2)
+
+        combo_search = ttk.Combobox(
+            table_frame,
+            font=("arial", 12, "bold"),
+            width=24,
+            state="readonly",
+        )
+        combo_search["value"] = ("Mobile", "Ref")
+        combo_search.current(0)
+        combo_search.grid(row=0, column=1, padx=2)
+
+        search_text = ttk.Entry(
+            table_frame,
+            width=24,
+            font=("times new roman", 13, "bold"),
+        )
+        search_text.grid(row=0, column=2, padx=2)
+        btnSearch = Button(
+            table_frame,
+            text="Search",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnSearch.grid(row=0, column=3, padx=1)
+
+        btnShowAll = Button(
+            table_frame,
+            text="Show All",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnShowAll.grid(row=0, column=4, padx=1)
+
+        #! SHOW DATA TABLE
+        details_table = Frame(table_frame, bd=2, relief=RIDGE)
+        details_table.place(x=0, y=50, width=990, height=350)
+
+        scroll_x = ttk.Scrollbar(details_table, orient=HORIZONTAL)
+        scroll_y = ttk.Scrollbar(details_table, orient=VERTICAL)
+
+        self.Cus_Details_Table = ttk.Treeview(
+            details_table,
+            column=(
+                "ref",
+                "name",
+                "mother",
+                "gender",
+                "post",
+                "mobile",
+                "email",
+                "nationality",
+                "idproof",
+                "idnumber",
+                "address",
+            ),
+            xscrollcommand=scroll_x.set,
+            yscrollcommand=scroll_y.set,
+        )
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x.config(command=self.Cus_Details_Table.xview)
+        scroll_y.config(command=self.Cus_Details_Table.yview)
+
+        self.Cus_Details_Table.heading("ref", text="Reference No:")
+        self.Cus_Details_Table.heading("name", text="Name:")
+        self.Cus_Details_Table.heading("mother", text="Mother Name:")
+        self.Cus_Details_Table.heading("gender", text="Gender:")
+        self.Cus_Details_Table.heading("post", text="PostCode:")
+        self.Cus_Details_Table.heading("mobile", text="Mobile No:")
+        self.Cus_Details_Table.heading("email", text="E-Mail:")
+        self.Cus_Details_Table.heading("nationality", text="Nationality:")
+        self.Cus_Details_Table.heading("idproof", text="Id Proof.:")
+        self.Cus_Details_Table.heading("idnumber", text="Id Number:")
+        self.Cus_Details_Table.heading("address", text="Adress:")
+
+        self.Cus_Details_Table["show"] = "headings"
+        self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+
 
 if __name__ == "__main__":
     root = Tk()
