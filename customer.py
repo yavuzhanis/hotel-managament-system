@@ -322,6 +322,7 @@ class Cust_Window:
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
+            command=self.reset,
             width=10,
         )
         btnReset.grid(row=0, column=3, padx=1)
@@ -578,13 +579,28 @@ class Cust_Window:
             query = "DELETE FROM customer WHERE Ref=%s"
             value = (self.var_ref.get(),)
             my_cursor.execute(query, value)
-            
+
             con.commit()
             self.fetch_data()
             con.close()
         else:
             if not mDelete:
                 return
+
+    def reset(self):
+        #self.var_ref.set(""),
+        self.var_cust_name.set(""),
+        self.var_mother.set(""),
+        #self.var_gender.set(""),
+        self.var_post.set(""),
+        self.var_mobile.set(""),
+        self.var_email.set(""),
+        #self.var_nationality.set(""),
+        #self.var_id_proof.set(""),
+        self.var_id_number.set(""),
+        self.var_address.set("")
+        x=random.randint(1000,9999)
+        self.var_ref.set(str(x))
 
 
 if __name__ == "__main__":
