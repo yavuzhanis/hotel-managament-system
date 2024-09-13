@@ -300,6 +300,7 @@ class Cust_Window:
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
+            command=self.update,
             width=10,
         )
         btnUpdate.grid(row=0, column=1, padx=1)
@@ -437,7 +438,7 @@ class Cust_Window:
         self.Cus_Details_Table.column("address", width=100)
 
         self.Cus_Details_Table.pack(fill=BOTH, expand=1)
-        self.Cus_Details_Table.bind("<ButtonRelease-1>",self.get_cursors)
+        self.Cus_Details_Table.bind("<ButtonRelease-1>", self.get_cursors)
         self.fetch_data()
 
     def add_data(self):
@@ -514,6 +515,43 @@ class Cust_Window:
         self.var_id_proof.set(row[8])
         self.var_id_number.set(row[9])
         self.var_address.set(row[10])
+
+    def update(self):
+        if self.var_mobile.get() == "":
+            messagebox.showerror(
+                "Error", "Please enter a mobile number", parent=self.root
+            )
+        else:
+            con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+            my_cursor = con.cursor()
+            my_cursor.execute(
+                "update customer set Name=%s,Mother=%s,Gender=%s,PostCode=%s,Email=%s,Nationality=%s,Idproof=%s,idnumber=%s,Address=% where Ref=%s",
+                (
+                    self.var_cust_name.get(),
+                    self.var_mother.get(),
+                    self.var_gender.get(),
+                    self.var_post.get(),
+                    self.var_mobile.get(),
+                    self.var_email.get(),
+                    self.var_nationality.get(),
+                    self.var_id_proof.get(),
+                    self.var_id_number.get(),
+                    self.var_address.get(),
+                    self.var_ref.get(),
+                ),
+            )  #! db changed
+
+            con.commit()
+            self.fetch_data()
+            con.close()
+            messagebox.showinfo(
+                "Updated", "Customer details has been updated Successfully"
+            )
 
 
 if __name__ == "__main__":
