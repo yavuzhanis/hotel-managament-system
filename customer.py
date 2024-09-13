@@ -518,40 +518,40 @@ class Cust_Window:
 
     def update(self):
         if self.var_mobile.get() == "":
-            messagebox.showerror(
-                "Error", "Please enter a mobile number", parent=self.root
-            )
+            messagebox.showerror("Error", "Please enter the mobile number", parent=self.root)
         else:
-            con = mysql.connector.connect(
-                host="localhost",
-                username="root",
-                password="ASDfgh2580.",
-                database="hotelManagament",
-            )
-            my_cursor = con.cursor()
-            my_cursor.execute(
-                "update customer set Name=%s,Mother=%s,Gender=%s,PostCode=%s,Email=%s,Nationality=%s,Idproof=%s,idnumber=%s,Address=% where Ref=%s",
-                (
-                    self.var_cust_name.get(),
-                    self.var_mother.get(),
-                    self.var_gender.get(),
-                    self.var_post.get(),
-                    self.var_mobile.get(),
-                    self.var_email.get(),
-                    self.var_nationality.get(),
-                    self.var_id_proof.get(),
-                    self.var_id_number.get(),
-                    self.var_address.get(),
-                    self.var_ref.get(),
-                ),
-            )  #! db changed
+            try:
+                con = mysql.connector.connect(
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                my_cursor.execute(
+                    "update customer set Name=%s, Mother=%s, Gender=%s, PostCode=%s, Mobile=%s, Email=%s, Nationality=%s, Idproof=%s, Idnumber=%s, Address=%s where Ref=%s",
+                    (
+                        self.var_cust_name.get(),
+                        self.var_mother.get(),
+                        self.var_gender.get(),
+                        self.var_post.get(),
+                        self.var_mobile.get(),
+                        self.var_email.get(),
+                        self.var_nationality.get(),
+                        self.var_id_proof.get(),
+                        self.var_id_number.get(),
+                        self.var_address.get(),
+                        self.var_ref.get(),
+                    ),
+                )
+                con.commit()
+                self.fetch_data()
+                con.close()
+                messagebox.showinfo("Update", "Customer details have been updated successfully", parent=self.root)
+            except Exception as es:
+                messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
-            con.commit()
-            self.fetch_data()
-            con.close()
-            messagebox.showinfo(
-                "Updated", "Customer details has been updated Successfully"
-            )
+            
 
 
 if __name__ == "__main__":
