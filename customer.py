@@ -311,6 +311,7 @@ class Cust_Window:
             font=("times new roman", 12, "bold"),
             bg="red",
             fg="black",
+            command=self.mDelete,
             width=10,
         )
         btnDelete.grid(row=0, column=2, padx=1)
@@ -518,7 +519,9 @@ class Cust_Window:
 
     def update(self):
         if self.var_mobile.get() == "":
-            messagebox.showerror("Error", "Please enter the mobile number", parent=self.root)
+            messagebox.showerror(
+                "Error", "Please enter the mobile number", parent=self.root
+            )
         else:
             try:
                 con = mysql.connector.connect(
@@ -547,11 +550,41 @@ class Cust_Window:
                 con.commit()
                 self.fetch_data()
                 con.close()
-                messagebox.showinfo("Update", "Customer details have been updated successfully", parent=self.root)
+                messagebox.showinfo(
+                    "Update",
+                    "Customer details have been updated successfully",
+                    parent=self.root,
+                )
             except Exception as es:
-                messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
+                messagebox.showwarning(
+                    "Warning", f"Something went wrong: {str(es)}", parent=self.root
+                )
 
+    def mDelete(self):
+        mDelete = messagebox.askyesno(
+            "Hotel Management System",
+            "Do you want to delete this customer?",
+            parent=self.root,
+        )
+        if mDelete > 0:
+            con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+            my_cursor = con.cursor()
+            # Correct SQL query with WHERE clause
+            query = "DELETE FROM customer WHERE Ref=%s"
+            value = (self.var_ref.get(),)
+            my_cursor.execute(query, value)
             
+            con.commit()
+            self.fetch_data()
+            con.close()
+        else:
+            if not mDelete:
+                return
 
 
 if __name__ == "__main__":
