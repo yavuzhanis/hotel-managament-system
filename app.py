@@ -2,6 +2,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 from customer import Cust_Window
 from tkinter import ttk
+from room import RoomBooking
+
 
 class HotelManagamentSystem:
     def __init__(self, root):
@@ -9,12 +11,9 @@ class HotelManagamentSystem:
         self.root.title("Hotel Managament System")
         self.root.geometry("1700x900+0+0")
 
-
-         #! Style and theme setup
+        #! Style and theme setup
         style = ttk.Style()
         style.theme_use("clam")
-
-
 
         # ! ÜST IMG
         img1 = Image.open(r"./images/hotel.png")
@@ -74,6 +73,7 @@ class HotelManagamentSystem:
         room_btn = Button(
             btn_frame,
             text="ROOM",
+            command=self.room_booking,
             width=27,
             font=("times new roman", 14, "bold"),
             bg="black",
@@ -142,7 +142,9 @@ class HotelManagamentSystem:
         self.new_window = Toplevel(self.root)
         self.app = Cust_Window(self.new_window)
 
-
+    def room_booking(self):
+        self.new_window = Toplevel(self.root)
+        self.app = RoomBooking(self.new_window)
 
 
 if __name__ == "__main__":
