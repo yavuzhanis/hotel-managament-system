@@ -345,9 +345,10 @@ class Cust_Window:
             font=("times new roman", 14, "bold"),
         )
         lbl_Searchby.grid(row=0, column=0, sticky=W, padx=2)
-
+        self.search_var = StringVar()
         combo_search = ttk.Combobox(
             table_frame,
+            textvariable=self.search_var,
             font=("arial", 12, "bold"),
             width=24,
             state="readonly",
@@ -356,8 +357,10 @@ class Cust_Window:
         combo_search.current(0)
         combo_search.grid(row=0, column=1, padx=2)
 
+        self.text_search = StringVar()
         search_text = ttk.Entry(
             table_frame,
+            textvariable=self.text_search,
             width=24,
             font=("times new roman", 13, "bold"),
         )
@@ -365,6 +368,7 @@ class Cust_Window:
         btnSearch = Button(
             table_frame,
             text="Search",
+            command=self.search,
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
@@ -375,6 +379,7 @@ class Cust_Window:
         btnShowAll = Button(
             table_frame,
             text="Show All",
+            command=self.fetch_data,
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
@@ -588,19 +593,44 @@ class Cust_Window:
                 return
 
     def reset(self):
-        #self.var_ref.set(""),
+        # self.var_ref.set(""),
         self.var_cust_name.set(""),
         self.var_mother.set(""),
-        #self.var_gender.set(""),
+        # self.var_gender.set(""),
         self.var_post.set(""),
         self.var_mobile.set(""),
         self.var_email.set(""),
-        #self.var_nationality.set(""),
-        #self.var_id_proof.set(""),
+        # self.var_nationality.set(""),
+        # self.var_id_proof.set(""),
         self.var_id_number.set(""),
         self.var_address.set("")
-        x=random.randint(1000,9999)
+        x = random.randint(1000, 9999)
         self.var_ref.set(str(x))
+
+    def search(self):
+        con = mysql.connector.connect(
+            host="localhost",
+            username="root",
+            password="ASDfgh2580.",
+            database="hotelManagament",
+        )
+        my_cursor = con.cursor()
+
+        # SQL sorgusunu parametreli hale getiriyoruz
+        query = "SELECT * FROM customer WHERE {} LIKE %s".format(self.search_var.get())
+
+        # SQL sorgusunu çalıştırıyoruz
+        my_cursor.execute(query, ("%" + self.text_search.get() + "%",))
+
+        rows = my_cursor.fetchall()
+        if len(rows) != 0:
+            # Tabloyu temizleyip yeni verileri ekliyoruz
+            self.Cus_Details_Table.delete(*self.Cus_Details_Table.get_children())
+            for i in rows:
+                self.Cus_Details_Table.insert("", END, values=i)
+            con.commit()
+
+        con.close()
 
 
 if __name__ == "__main__":
