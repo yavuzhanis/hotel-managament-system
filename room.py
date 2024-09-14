@@ -47,23 +47,22 @@ class RoomBooking:
         LabelFrameleft.place(x=5, y=60, width=425, height=490)
 
         #! labels and entrys
-        lbl_cust_ref = Label(
+        lbl_cust_contact = Label(
             LabelFrameleft,
-            text="Customer Ref:",
+            text="Customer Contact:",
             font=("times new roman", 12, "bold"),
             padx=2,
             pady=6,
         )
-        lbl_cust_ref.grid(row=0, column=0, sticky=W)
+        lbl_cust_contact.grid(row=0, column=0, sticky=W)
 
-        enty_ref = ttk.Entry(
+        enty_contact = ttk.Entry(
             LabelFrameleft,
             width=26,
-            textvariable=self.var_ref,
             font=("times new roman", 13, "bold"),
             state="readonly",
         )
-        enty_ref.grid(row=0, column=1)
+        enty_contact.grid(row=0, column=1)
 
 
 if __name__ == "__main__":
