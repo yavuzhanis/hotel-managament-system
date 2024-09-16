@@ -12,6 +12,19 @@ class RoomBooking:
         self.root = root
         self.root.title("Hotel Management System")
         self.root.geometry("1460x570+240+294")
+        # ?  ------------------variables------------------
+
+        self.var_contact = StringVar()
+        self.var_checkin = StringVar()
+        self.var_checkout = StringVar()
+        self.var_checkout = StringVar()
+        self.var_roomtype = StringVar()
+        self.var_roomAvailable = StringVar()
+        self.var_meal = StringVar()
+        self.var_noOfdays = StringVar()
+        self.var_paidTax = StringVar()
+        self.var_actualtotal = StringVar()
+        self.var_total = StringVar()
 
         #! Style and theme setup
         style = ttk.Style()
@@ -59,10 +72,21 @@ class RoomBooking:
         enty_contact = ttk.Entry(
             LabelFrameleft,
             width=26,
+            textvariable=self.var_contact,
             font=("times new roman", 13, "bold"),
-            state="readonly",
         )
-        enty_contact.grid(row=0, column=1)
+        enty_contact.grid(row=0, column=1, sticky=W)
+        #! fetch data button
+        btnfetchData = Button(
+            LabelFrameleft,
+            command=self.fetch_contact,
+            text="Fetch Data",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnfetchData.place(x=320, y=3)
         #! check IN date
         check_in_date = Label(
             LabelFrameleft,
@@ -74,6 +98,7 @@ class RoomBooking:
         check_in_date.grid(row=1, column=0, sticky=W)
         text_check_in_date = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_checkin,
             width=26,
             font=("times new roman", 13, "bold"),
         )
@@ -89,6 +114,7 @@ class RoomBooking:
         check_out_date.grid(row=2, column=0, sticky=W)
         text_check_out_date = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_checkout,
             width=26,
             font=("times new roman", 13, "bold"),
         )
@@ -106,6 +132,7 @@ class RoomBooking:
 
         combo_roomType = ttk.Combobox(
             LabelFrameleft,
+            textvariable=self.var_roomtype,
             font=("arial", 12, "bold"),
             width=27,
             state="readonly",
@@ -126,6 +153,7 @@ class RoomBooking:
 
         lblRoomAvaliable_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_roomAvailable,
             width=26,
             font=("times new roman", 13, "bold"),
         )
@@ -142,6 +170,7 @@ class RoomBooking:
 
         lblMeal_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_meal,
             width=26,
             font=("times new roman", 13, "bold"),
         )
@@ -157,12 +186,13 @@ class RoomBooking:
         )
         lblNo_OfDays.grid(row=6, column=0, sticky=W)
 
-        lblMeal_text = ttk.Entry(
+        lblNo_OfDays_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_noOfdays,
             width=26,
             font=("times new roman", 13, "bold"),
         )
-        lblMeal_text.grid(row=6, column=1)
+        lblNo_OfDays_text.grid(row=6, column=1)
 
         # ? paid tax
         lblpaid_tax = Label(
@@ -176,6 +206,7 @@ class RoomBooking:
 
         lblpaid_tax_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_paidTax,
             width=26,
             font=("times new roman", 13, "bold"),
         )
@@ -193,27 +224,226 @@ class RoomBooking:
 
         lblSubTotal_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_actualtotal,
             width=26,
             font=("times new roman", 13, "bold"),
         )
         lblSubTotal_text.grid(row=8, column=1)
 
         # ? total cost
-        lblIdNumber = Label(
+        lbltotal = Label(
             LabelFrameleft,
             font=("times new roman", 13, "bold"),
             text=" Total Cost:",
             padx=2,
             pady=6,
         )
-        lblIdNumber.grid(row=9, column=0, sticky=W)
+        lbltotal.grid(row=9, column=0, sticky=W)
 
-        lblIdNumber_text = ttk.Entry(
+        lbltotal_text = ttk.Entry(
             LabelFrameleft,
+            textvariable=self.var_total,
             width=26,
             font=("times new roman", 13, "bold"),
         )
-        lblIdNumber_text.grid(row=9, column=1)
+        lbltotal_text.grid(row=9, column=1)
+
+        #! ------------------------------------------Bill Button ----------------------------------------------------------------
+
+        btnBill = Button(
+            LabelFrameleft,
+            text="Bill",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnBill.grid(row=10, column=0, padx=1, sticky=W)
+
+        #! buttons
+        btn_frame = Frame(LabelFrameleft, bd=2, relief=RIDGE)
+        btn_frame.place(x=0, y=400, width=412, height=30)
+
+        btnAdd = Button(
+            btn_frame,
+            text="Add",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnAdd.grid(row=0, column=0, padx=1, sticky=W)
+
+        btnUpdate = Button(
+            btn_frame,
+            text="Update",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnUpdate.grid(row=0, column=1, padx=1)
+
+        btnDelete = Button(
+            btn_frame,
+            text="Delete",
+            font=("times new roman", 12, "bold"),
+            bg="red",
+            fg="black",
+            width=10,
+        )
+        btnDelete.grid(row=0, column=2, padx=1)
+
+        btnReset = Button(
+            btn_frame,
+            text="Reset",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnReset.grid(row=0, column=3, padx=1)
+        #! ---------------------------Right Side Img------------------------------------
+        img3 = Image.open(r"./images/room.jpg")
+        img3 = img3.resize((520, 260), Image.LANCZOS)
+        self.photoImg3 = ImageTk.PhotoImage(img3)
+        lblImg = Label(self.root, image=self.photoImg3, bd=0, relief=RIDGE)
+        lblImg.place(x=800, y=80, width=520, height=260)
+        #!------------------- label frame --------------------------------
+        table_frame = LabelFrame(
+            self.root,
+            bd=2,
+            relief=RIDGE,
+            text="View Details and Search System",
+            font=("times new roman", 12, "bold"),
+            padx=2,
+        )
+        table_frame.place(x=435, y=280, width=1000, height=280)
+
+        lbl_Searchby = Label(
+            table_frame,
+            text="Search By:",
+            fg="red",
+            font=("times new roman", 14, "bold"),
+        )
+        lbl_Searchby.grid(row=0, column=0, sticky=W, padx=2)
+        self.search_var = StringVar()
+        combo_search = ttk.Combobox(
+            table_frame,
+            textvariable=self.search_var,
+            font=("arial", 12, "bold"),
+            width=24,
+            state="readonly",
+        )
+        combo_search["value"] = ("Contact", "Room")
+        combo_search.current(0)
+        combo_search.grid(row=0, column=1, padx=2)
+
+        self.text_search = StringVar()
+        search_text = ttk.Entry(
+            table_frame,
+            textvariable=self.text_search,
+            width=24,
+            font=("times new roman", 13, "bold"),
+        )
+        search_text.grid(row=0, column=2, padx=2)
+        btnSearch = Button(
+            table_frame,
+            text="Search",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnSearch.grid(row=0, column=3, padx=1)
+
+        btnShowAll = Button(
+            table_frame,
+            text="Show All",
+            font=("times new roman", 12, "bold"),
+            bg="gold",
+            fg="black",
+            width=10,
+        )
+        btnShowAll.grid(row=0, column=4, padx=1)
+        #! ---------------------SHOW DATA TABLE------------------------------------------------
+        details_table = Frame(table_frame, bd=2, relief=RIDGE)
+        details_table.place(x=0, y=50, width=990, height=250)
+
+        scroll_x = ttk.Scrollbar(details_table, orient=HORIZONTAL)
+        scroll_y = ttk.Scrollbar(details_table, orient=VERTICAL)
+
+        self.Cus_Details_Table = ttk.Treeview(
+            details_table,
+            column=(
+                "contact",
+                "checkInDate",
+                "CheckOutDate",
+                "RoomType",
+                "RoomAvailability",
+                "Meal",
+                "NoOFdays",
+            ),
+            xscrollcommand=scroll_x.set,
+            yscrollcommand=scroll_y.set,
+        )
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x.config(command=self.Cus_Details_Table.xview)
+        scroll_y.config(command=self.Cus_Details_Table.yview)
+
+        self.Cus_Details_Table.heading("contact", text="Contact")
+        self.Cus_Details_Table.heading("checkInDate", text="CheckInDate")
+        self.Cus_Details_Table.heading("CheckOutDate", text="CheckOutDate")
+        self.Cus_Details_Table.heading("RoomType", text="RoomType")
+        self.Cus_Details_Table.heading("RoomAvailability", text="Room Avaliable")
+        self.Cus_Details_Table.heading("Meal", text="Meal")
+        self.Cus_Details_Table.heading("NoOFdays", text="NoOFdays")
+
+        self.Cus_Details_Table["show"] = "headings"
+
+        self.Cus_Details_Table.column("contact", width=100)
+        self.Cus_Details_Table.column("checkInDate", width=100)
+        self.Cus_Details_Table.column("CheckOutDate", width=100)
+        self.Cus_Details_Table.column("RoomType", width=100)
+        self.Cus_Details_Table.column("RoomAvailability", width=100)
+        self.Cus_Details_Table.column("Meal", width=100)
+        self.Cus_Details_Table.column("NoOFdays", width=100)
+
+        self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+
+    def fetch_contact(self):
+        if self.var_contact.get() == "":
+            messagebox.showerror(
+                "Error", "Please enter a contact Number", parent=self.root
+            )
+        else:
+            con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+            my_cursor = con.cursor()
+            query = "SELECT NAME FROM customer WHERE Mobile=%s"
+            value = (self.var_contact.get(),)
+            my_cursor.execute(query, value)
+            row = my_cursor.fetchone()
+            if row == None:
+                messagebox.showerror("Error", "This number Not Found", parent=self.root)
+            else:
+                con.commit()
+                con.close()
+
+                showDataFrame = Frame(self.root, bd=4, relief=RIDGE, padx=2)
+                showDataFrame.place(x=455, y=68, width=300, height=180)
+
+                lblName = Label(showDataFrame, text="Name:", font=("arial", 12, "bold"))
+                lblName.place(x=0, y=0)
+
+                lbl = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
+                lbl.place(x=90, y=0)
 
 
 if __name__ == "__main__":
