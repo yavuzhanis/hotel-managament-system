@@ -445,6 +445,25 @@ class RoomBooking:
                 lbl = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl.place(x=90, y=0)
 
+                con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+                my_cursor = con.cursor()
+                query = "SELECT GENDER FROM customer WHERE Mobile=%s"
+                value = (self.var_contact.get(),)
+                my_cursor.execute(query, value)
+                row = my_cursor.fetchone()
+
+
+                lblGender = Label(showDataFrame, text="Gender:", font=("arial", 12, "bold"))
+                lblGender.place(x=0, y=30)
+
+                lbl2 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
+                lbl2.place(x=90, y=30)
+
 
 if __name__ == "__main__":
     root = Tk()
