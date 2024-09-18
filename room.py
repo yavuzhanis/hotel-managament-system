@@ -269,6 +269,7 @@ class RoomBooking:
             text="Add",
             font=("times new roman", 12, "bold"),
             bg="gold",
+            command=self.add_data,
             fg="black",
             width=10,
         )
@@ -373,7 +374,7 @@ class RoomBooking:
         scroll_x = ttk.Scrollbar(details_table, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(details_table, orient=VERTICAL)
 
-        self.Cus_Details_Table = ttk.Treeview(
+        self.room_table = ttk.Treeview(
             details_table,
             column=(
                 "contact",
@@ -390,28 +391,92 @@ class RoomBooking:
         scroll_x.pack(side=BOTTOM, fill=X)
         scroll_y.pack(side=RIGHT, fill=Y)
 
-        scroll_x.config(command=self.Cus_Details_Table.xview)
-        scroll_y.config(command=self.Cus_Details_Table.yview)
+        scroll_x.config(command=self.room_table.xview)
+        scroll_y.config(command=self.room_table.yview)
 
-        self.Cus_Details_Table.heading("contact", text="Contact")
-        self.Cus_Details_Table.heading("checkInDate", text="CheckInDate")
-        self.Cus_Details_Table.heading("CheckOutDate", text="CheckOutDate")
-        self.Cus_Details_Table.heading("RoomType", text="RoomType")
-        self.Cus_Details_Table.heading("RoomAvailability", text="Room Avaliable")
-        self.Cus_Details_Table.heading("Meal", text="Meal")
-        self.Cus_Details_Table.heading("NoOFdays", text="NoOFdays")
+        self.room_table.heading("contact", text="Contact")
+        self.room_table.heading("checkInDate", text="CheckInDate")
+        self.room_table.heading("CheckOutDate", text="CheckOutDate")
+        self.room_table.heading("RoomType", text="RoomType")
+        self.room_table.heading("RoomAvailability", text="Room Avaliable")
+        self.room_table.heading("Meal", text="Meal")
+        self.room_table.heading("NoOFdays", text="NoOFdays")
 
-        self.Cus_Details_Table["show"] = "headings"
+        self.room_table["show"] = "headings"
 
-        self.Cus_Details_Table.column("contact", width=100)
-        self.Cus_Details_Table.column("checkInDate", width=100)
-        self.Cus_Details_Table.column("CheckOutDate", width=100)
-        self.Cus_Details_Table.column("RoomType", width=100)
-        self.Cus_Details_Table.column("RoomAvailability", width=100)
-        self.Cus_Details_Table.column("Meal", width=100)
-        self.Cus_Details_Table.column("NoOFdays", width=100)
+        self.room_table.column("contact", width=100)
+        self.room_table.column("checkInDate", width=100)
+        self.room_table.column("CheckOutDate", width=100)
+        self.room_table.column("RoomType", width=100)
+        self.room_table.column("RoomAvailability", width=100)
+        self.room_table.column("Meal", width=100)
+        self.room_table.column("NoOFdays", width=100)
 
-        self.Cus_Details_Table.pack(fill=BOTH, expand=1)
+        self.room_table.pack(fill=BOTH, expand=1)
+
+        self.fetch_data()
+
+
+
+    def add_data(self):
+        if self.var_contact.get() == "" or self.var_checkin.get() == "":
+            messagebox.showerror(
+                "Error", "All fields are required!,please.", parent=self.root
+            )
+        else:
+            try:
+                con = mysql.connector.connect(
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                my_cursor.execute(
+                    "insert into room values(%s,%s,%s,%s,%s,%s,%s)",
+                    (
+                        self.var_contact.get(),
+                        self.var_checkin.get(),
+                        self.var_checkout.get(),
+                        self.var_roomtype.get(),
+                        self.var_roomAvailable.get(),
+                        self.var_meal.get(),
+                        self.var_noOfdays.get(),
+                    ),
+                )
+                con.commit()
+                self.fetch_data()
+                con.close()
+                messagebox.showinfo(
+                    "Success", "customer in room has been added!", parent=self.root
+                )
+            except Exception as es:
+                messagebox.showwarning(
+                    "Warning", f"Something went wrong!:{str(es)}", parent=self.root
+                )
+
+    #! fetch_data
+    def fetch_data(self):
+        con = mysql.connector.connect(
+            host="localhost",
+            username="root",
+            password="ASDfgh2580.",
+            database="hotelManagament",
+        )
+        my_cursor = con.cursor()
+        my_cursor.execute("select * from room")  #! db changed
+        rows = my_cursor.fetchall()
+        if len(rows) != 0:
+            self.room_table.delete(*self.room_table.get_children())
+            for i in rows:
+                self.room_table.insert("", END, values=i)
+            con.commit()
+        con.close()
+
+
+
+
+
 
     def fetch_contact(self):
         if self.var_contact.get() == "":
@@ -463,6 +528,76 @@ class RoomBooking:
 
                 lbl2 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl2.place(x=90, y=30)
+
+                #! email
+
+                con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                query = "SELECT EMAIL FROM customer WHERE Mobile=%s"
+                value = (self.var_contact.get(),)
+                my_cursor.execute(query, value)
+                row = my_cursor.fetchone()
+
+                lblEmail = Label(showDataFrame, text="Email:", font=("arial", 12, "bold"))
+                lblEmail.place(x=0, y=60)
+
+                lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
+                lbl3.place(x=90, y=60)
+
+                #Nationality
+                con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                query = "SELECT NATIONALITY FROM customer WHERE Mobile=%s"
+                value = (self.var_contact.get(),)
+                my_cursor.execute(query, value)
+                row = my_cursor.fetchone()
+
+                lblEmail = Label(showDataFrame, text="Nationality:", font=("arial", 12, "bold"))
+                lblEmail.place(x=0, y=90)
+
+                lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
+                lbl3.place(x=90, y=90)
+
+                #? Address
+                con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                query = "SELECT ADDRESS FROM customer WHERE Mobile=%s"
+                value = (self.var_contact.get(),)
+                my_cursor.execute(query, value)
+                row = my_cursor.fetchone()
+
+                lblEmail = Label(showDataFrame, text="Address:", font=("arial", 12, "bold"))
+                lblEmail.place(x=0, y=120)
+
+                lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
+                lbl3.place(x=90, y=120)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
