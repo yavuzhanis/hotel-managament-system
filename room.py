@@ -2,6 +2,9 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import ttk
 import random
+from time import strftime, strptime
+from datetime import datetime
+
 import mysql.connector
 from tkinter import messagebox
 
@@ -253,6 +256,7 @@ class RoomBooking:
         btnBill = Button(
             LabelFrameleft,
             text="Bill",
+            command=self.mTotal,
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
@@ -477,14 +481,18 @@ class RoomBooking:
         content = self.room_table.item(cursor_row)
         row = content["values"]
 
-        # 'set' method should be used here instead of 'get'
-        self.var_contact.set(row[0])
-        self.var_checkin.set(row[1])
-        self.var_checkout.set(row[2])
-        self.var_roomtype.set(row[3])
-        self.var_roomAvailable.set(row[4])
-        self.var_meal.set(row[5])
-        self.var_noOfdays.set(row[6])
+        print("Row values:", row)  # Bu satır row değerlerini yazdıracak
+
+        if row:  # Eğer row boş değilse
+            self.var_contact.set(row[0])
+            self.var_checkin.set(row[1])
+            self.var_checkout.set(row[2])
+            self.var_roomtype.set(row[3])
+            self.var_roomAvailable.set(row[4])
+            self.var_meal.set(row[5])
+            self.var_noOfdays.set(row[6])
+        else:
+            print("No data found.")
 
     #! update
     def update(self):
@@ -512,7 +520,7 @@ class RoomBooking:
                         self.var_checkout.get(),
                         self.var_roomtype.get(),
                         self.var_roomAvailable.get(),
-                        self.var_meals.get(),
+                        self.var_meal.get(),
                         self.var_noOfdays.get(),
                         self.var_contact.get(),  # self.var_contact.get() en sonda olmalı, çünkü WHERE'de kullanılıyor
                     ),
@@ -566,8 +574,8 @@ class RoomBooking:
         self.var_roomAvailable.set("")
         self.var_meal.set("")
         self.var_noOfdays.set("")
-        #x = random.randint(1000, 9999)
-        #self.var_ref.set(str(x))
+        # x = random.randint(1000, 9999)
+        # self.var_ref.set(str(x))
 
     def fetch_contact(self):
         if self.var_contact.get() == "":
@@ -684,6 +692,56 @@ class RoomBooking:
 
                 lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl3.place(x=90, y=120)
+
+    def mTotal(self):
+        try:
+            inDate = self.var_checkin.get()
+            outDate = self.var_checkout.get()
+            
+            print(f"Check-in: {inDate}, Check-out: {outDate}, Meal: {self.var_meal.get()}")  # Kontrol için
+
+            # Tarih formatını kontrol et
+            inDate = datetime.strptime(inDate, "%d/%m/%Y")
+            outDate = datetime.strptime(outDate, "%d/%m/%Y")
+
+            # Gün farkını hesapla
+            noOfDays = (outDate - inDate).days
+            print(f"Gün Sayısı: {noOfDays}") 
+            self.var_noOfdays.set(noOfDays)
+
+            # Oda fiyatları
+            singleRoomCost = 400
+            doubleRoomCost = 500
+            luxuryRoomCost = 700
+            breakfastCost = 200
+
+            # Hesaplamalar
+            roomType = self.var_roomtype.get().lower()  # Oda tipini küçük harfe çevir
+
+            if self.var_meal.get() == "Breakfast":
+                if roomType == "single":
+                    totalCost = noOfDays * (breakfastCost + singleRoomCost)
+                elif roomType == "double":
+                    totalCost = noOfDays * (breakfastCost + doubleRoomCost)
+                elif roomType == "luxury":
+                    totalCost = noOfDays * (breakfastCost + luxuryRoomCost)
+                else:
+                    totalCost = 0  # Geçersiz oda tipi için
+
+                # Vergi ve toplam hesaplamaları
+                taxAmount = totalCost * 0.20
+                totalWithTax = totalCost + taxAmount
+
+                # Değerleri ayarla
+                self.var_paidTax.set(f"TL. {taxAmount:.2f}")
+                self.var_actualtotal.set(f"TL. {totalCost:.2f}")
+                self.var_total.set(f"TL. {totalWithTax:.2f}")
+
+        except ValueError as e:
+            print(f"Tarih formatı hatalı: {e}")
+
+
+
 
 
 if __name__ == "__main__":
