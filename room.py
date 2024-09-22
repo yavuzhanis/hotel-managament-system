@@ -405,7 +405,7 @@ class RoomBooking:
         self.room_table.heading("checkInDate", text="CheckInDate")
         self.room_table.heading("CheckOutDate", text="CheckOutDate")
         self.room_table.heading("RoomType", text="RoomType")
-        self.room_table.heading("RoomAvailability", text="Room Avaliable")
+        self.room_table.heading("RoomAvailability", text="Room No")
         self.room_table.heading("Meal", text="Meal")
         self.room_table.heading("NoOFdays", text="NoOFdays")
 
