@@ -356,6 +356,7 @@ class RoomBooking:
         btnSearch = Button(
             table_frame,
             text="Search",
+            command=self.search,
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
@@ -367,6 +368,7 @@ class RoomBooking:
             table_frame,
             text="Show All",
             font=("times new roman", 12, "bold"),
+            command=self.fetch_data,
             bg="gold",
             fg="black",
             width=10,
@@ -692,6 +694,33 @@ class RoomBooking:
 
                 lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl3.place(x=90, y=120)
+
+#! search system
+    def search(self):
+            con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+            my_cursor = con.cursor()
+
+            # SQL sorgusunu parametreli hale getiriyoruz
+            query = "SELECT * FROM room WHERE {} LIKE %s".format(self.search_var.get())
+
+            # SQL sorgusunu çalıştırıyoruz
+            my_cursor.execute(query, ("%" + self.text_search.get() + "%",))
+
+            rows = my_cursor.fetchall()
+            if len(rows) != 0:
+                # Tabloyu temizleyip yeni verileri ekliyoruz
+                self.room_table.delete(*self.room_table.get_children())
+                for i in rows:
+                    self.room_table.insert("", END, values=i)
+                con.commit()
+
+            con.close()
+
 
     def mTotal(self):
         try:
