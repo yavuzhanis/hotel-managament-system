@@ -278,6 +278,7 @@ class RoomBooking:
         btnUpdate = Button(
             btn_frame,
             text="Update",
+            command=self.update,
             font=("times new roman", 12, "bold"),
             bg="gold",
             fg="black",
@@ -289,7 +290,7 @@ class RoomBooking:
             btn_frame,
             text="Delete",
             font=("times new roman", 12, "bold"),
-            bg="red",
+            command=self.mDelete,
             fg="black",
             width=10,
         )
@@ -299,7 +300,7 @@ class RoomBooking:
             btn_frame,
             text="Reset",
             font=("times new roman", 12, "bold"),
-            bg="gold",
+            command=self.reset,
             fg="black",
             width=10,
         )
@@ -413,11 +414,10 @@ class RoomBooking:
         self.room_table.column("NoOFdays", width=100)
 
         self.room_table.pack(fill=BOTH, expand=1)
-
+        self.room_table.bind("<ButtonRelease-1>", self.get_cursors)
         self.fetch_data()
 
-
-
+    #! add data
     def add_data(self):
         if self.var_contact.get() == "" or self.var_checkin.get() == "":
             messagebox.showerror(
@@ -447,9 +447,7 @@ class RoomBooking:
                 con.commit()
                 self.fetch_data()
                 con.close()
-                messagebox.showinfo(
-                    "Success", "customer in room has been added!", parent=self.root
-                )
+                messagebox.showinfo("Success", "Room in Booked!", parent=self.root)
             except Exception as es:
                 messagebox.showwarning(
                     "Warning", f"Something went wrong!:{str(es)}", parent=self.root
@@ -473,7 +471,103 @@ class RoomBooking:
             con.commit()
         con.close()
 
+    # get cursor
+    def get_cursors(self, event=""):
+        cursor_row = self.room_table.focus()
+        content = self.room_table.item(cursor_row)
+        row = content["values"]
 
+        # 'set' method should be used here instead of 'get'
+        self.var_contact.set(row[0])
+        self.var_checkin.set(row[1])
+        self.var_checkout.set(row[2])
+        self.var_roomtype.set(row[3])
+        self.var_roomAvailable.set(row[4])
+        self.var_meal.set(row[5])
+        self.var_noOfdays.set(row[6])
+
+    #! update
+    def update(self):
+        if self.var_contact.get() == "":
+            messagebox.showerror(
+                "Error", "Please enter the Contact number", parent=self.root
+            )
+        else:
+            try:
+                con = mysql.connector.connect(
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
+                )
+                my_cursor = con.cursor()
+                my_cursor.execute(
+                    """
+                    UPDATE room 
+                    SET check_in=%s, check_out=%s, roomtype=%s, roomavaliable=%s, meals=%s, noOfdays=%s 
+                    WHERE Contact=%s
+                    """,
+                    (
+                        self.var_checkin.get(),
+                        self.var_checkout.get(),
+                        self.var_roomtype.get(),
+                        self.var_roomAvailable.get(),
+                        self.var_meals.get(),
+                        self.var_noOfdays.get(),
+                        self.var_contact.get(),  # self.var_contact.get() en sonda olmalı, çünkü WHERE'de kullanılıyor
+                    ),
+                )
+                con.commit()
+                self.fetch_data()
+
+                con.close()
+                messagebox.showinfo(
+                    "Update",
+                    "Customer details have been updated successfully",
+                    parent=self.root,
+                )
+            except Exception as es:
+                messagebox.showwarning(
+                    "Warning", f"Something went wrong: {str(es)}", parent=self.root
+                )
+
+    #! delete func
+    def mDelete(self):
+        mDelete = messagebox.askyesno(
+            "Hotel Management System",
+            "Do you want to delete this ROOM?",
+            parent=self.root,
+        )
+        if mDelete > 0:
+            con = mysql.connector.connect(
+                host="localhost",
+                username="root",
+                password="ASDfgh2580.",
+                database="hotelManagament",
+            )
+            my_cursor = con.cursor()
+            # Correct SQL query with WHERE clause
+            query = "DELETE FROM room WHERE Contact=%s"
+            value = (self.var_contact.get(),)
+            my_cursor.execute(query, value)
+
+            con.commit()
+            self.fetch_data()
+            con.close()
+        else:
+            if not mDelete:
+                return
+
+    def reset(self):
+        self.var_contact.set("")
+        self.var_checkin.set("")
+        self.var_checkout.set("")
+        self.var_roomtype.set("")
+        self.var_roomAvailable.set("")
+        self.var_meal.set("")
+        self.var_noOfdays.set("")
+        #x = random.randint(1000, 9999)
+        #self.var_ref.set(str(x))
 
     def fetch_contact(self):
         if self.var_contact.get() == "":
@@ -508,19 +602,20 @@ class RoomBooking:
                 lbl.place(x=90, y=0)
 
                 con = mysql.connector.connect(
-                host="localhost",
-                username="root",
-                password="ASDfgh2580.",
-                database="hotelManagament",
-            )
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
+                )
                 my_cursor = con.cursor()
                 query = "SELECT GENDER FROM customer WHERE Mobile=%s"
                 value = (self.var_contact.get(),)
                 my_cursor.execute(query, value)
                 row = my_cursor.fetchone()
 
-
-                lblGender = Label(showDataFrame, text="Gender:", font=("arial", 12, "bold"))
+                lblGender = Label(
+                    showDataFrame, text="Gender:", font=("arial", 12, "bold")
+                )
                 lblGender.place(x=0, y=30)
 
                 lbl2 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
@@ -529,10 +624,10 @@ class RoomBooking:
                 #! email
 
                 con = mysql.connector.connect(
-                host="localhost",
-                username="root",
-                password="ASDfgh2580.",
-                database="hotelManagament",
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
                 )
                 my_cursor = con.cursor()
                 query = "SELECT EMAIL FROM customer WHERE Mobile=%s"
@@ -540,18 +635,20 @@ class RoomBooking:
                 my_cursor.execute(query, value)
                 row = my_cursor.fetchone()
 
-                lblEmail = Label(showDataFrame, text="Email:", font=("arial", 12, "bold"))
+                lblEmail = Label(
+                    showDataFrame, text="Email:", font=("arial", 12, "bold")
+                )
                 lblEmail.place(x=0, y=60)
 
                 lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl3.place(x=90, y=60)
 
-                #Nationality
+                # Nationality
                 con = mysql.connector.connect(
-                host="localhost",
-                username="root",
-                password="ASDfgh2580.",
-                database="hotelManagament",
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
                 )
                 my_cursor = con.cursor()
                 query = "SELECT NATIONALITY FROM customer WHERE Mobile=%s"
@@ -559,18 +656,20 @@ class RoomBooking:
                 my_cursor.execute(query, value)
                 row = my_cursor.fetchone()
 
-                lblEmail = Label(showDataFrame, text="Nationality:", font=("arial", 12, "bold"))
+                lblEmail = Label(
+                    showDataFrame, text="Nationality:", font=("arial", 12, "bold")
+                )
                 lblEmail.place(x=0, y=90)
 
                 lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl3.place(x=90, y=90)
 
-                #? Address
+                # ? Address
                 con = mysql.connector.connect(
-                host="localhost",
-                username="root",
-                password="ASDfgh2580.",
-                database="hotelManagament",
+                    host="localhost",
+                    username="root",
+                    password="ASDfgh2580.",
+                    database="hotelManagament",
                 )
                 my_cursor = con.cursor()
                 query = "SELECT ADDRESS FROM customer WHERE Mobile=%s"
@@ -578,23 +677,13 @@ class RoomBooking:
                 my_cursor.execute(query, value)
                 row = my_cursor.fetchone()
 
-                lblEmail = Label(showDataFrame, text="Address:", font=("arial", 12, "bold"))
+                lblEmail = Label(
+                    showDataFrame, text="Address:", font=("arial", 12, "bold")
+                )
                 lblEmail.place(x=0, y=120)
 
                 lbl3 = Label(showDataFrame, text=row, font=("arial", 12, "bold"))
                 lbl3.place(x=90, y=120)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
