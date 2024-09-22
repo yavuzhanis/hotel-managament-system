@@ -475,9 +475,6 @@ class RoomBooking:
 
 
 
-
-
-
     def fetch_contact(self):
         if self.var_contact.get() == "":
             messagebox.showerror(
