@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from customer import Cust_Window
 from tkinter import ttk
 from room import RoomBooking
+from details import DetailsRoom
 
 
 class HotelManagamentSystem:
@@ -88,6 +89,7 @@ class HotelManagamentSystem:
             text="DETAILS",
             width=27,
             font=("times new roman", 14, "bold"),
+            command=self.details_room,
             bg="black",
             fg="gold",
             bd=0,
@@ -146,6 +148,9 @@ class HotelManagamentSystem:
         self.new_window = Toplevel(self.root)
         self.app = RoomBooking(self.new_window)
 
+    def details_room(self):
+        self.new_window = Toplevel(self.root)
+        self.app = DetailsRoom(self.new_window)
 
 if __name__ == "__main__":
     root = Tk()
